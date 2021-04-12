@@ -9,6 +9,8 @@ import {
 } from '@tmo/books/data-access';
 import { FormBuilder } from '@angular/forms';
 import { Book } from '@tmo/shared/models';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { SnackBarUndoActionComponent } from '../shared/snack-bar-undo-action/snack-bar-undo-action.component';
 
 @Component({
   selector: 'tmo-book-search',
@@ -22,9 +24,17 @@ export class BookSearchComponent implements OnInit {
     term: ''
   });
 
+  configSuccess: MatSnackBarConfig = {
+    panelClass: 'style-success',
+    duration: 7000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom'
+  };
+
   constructor(
     private readonly store: Store,
-    private readonly fb: FormBuilder
+    private readonly fb: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   get searchTerm(): string {
@@ -45,6 +55,10 @@ export class BookSearchComponent implements OnInit {
 
   addBookToReadingList(book: Book) {
     this.store.dispatch(addToReadingList({ book }));
+    this.snackBar.openFromComponent(SnackBarUndoActionComponent, {
+      data: {item: book, action: 'Add', message:'Book Added to List'},
+      ...this.configSuccess
+    })
   }
 
   searchExample() {
