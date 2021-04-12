@@ -49,12 +49,11 @@ export class BookSearchComponent implements OnInit {
 
   searchExample() {
     this.searchForm.controls.term.setValue('javascript');
-    this.searchBooks();
   }
 
-  searchBooks() {
-    if (this.searchForm.value.term) {
-      this.store.dispatch(searchBooks({ term: this.searchTerm }));
+  searchBooks(searchValue){
+    if (searchValue) {
+      this.store.dispatch(searchBooks({ term: searchValue }));
     } else {
       this.store.dispatch(clearSearch());
     }
